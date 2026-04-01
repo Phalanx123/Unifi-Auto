@@ -1,7 +1,7 @@
 {
   "client_id": "YOUR-ENTRA-APP-CLIENT-ID",
   "authorization_user_agent": "DEFAULT",
-  "redirect_uri": "msauth://com.example.unifiauto/YOUR_BASE64_SIGNATURE_HASH",
+  "redirect_uri": "msauth://com.structura.android/YOUR_BASE64_SIGNATURE_HASH",
   "broker_redirect_uri_registered": false,
   "account_mode": "SINGLE",
   "authorities": [

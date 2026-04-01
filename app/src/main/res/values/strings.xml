@@ -1,12 +1,7 @@
 <resources>
-    <string name="app_name">UniFi Auto Access</string>
-    <string name="sign_in">Sign in with Microsoft Entra</string>
-    <string name="refresh_doors">Refresh doors/gates</string>
+    <string name="app_name">Structura</string>
+    <string name="sign_in">Sign in with Microsoft</string>
+    <string name="refresh_jobs">Refresh Jobs</string>
     <string name="not_signed_in">Not signed in</string>
-    <string name="signed_in_as">Signed in as %1$s</string>
-    <string name="door_open_requested">Open request sent for %1$s</string>
-    <string name="door_open_failed">Failed to open %1$s</string>
-    <string name="car_screen_title">UniFi Doors &amp; Gates</string>
-    <string name="empty_doors">No doors or gates available</string>
-    <string name="login_required">Sign in on your phone to use Android Auto controls</string>
+    <string name="login_required">Sign in on your phone to use Android Auto</string>
 </resources>

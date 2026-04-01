@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.unifiauto"
+    namespace = "com.structura.android"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.unifiauto"
+        applicationId = "com.structura.android"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
