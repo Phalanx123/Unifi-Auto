@@ -9,7 +9,7 @@
         android:id="@+id/statusText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/not_signed_in"
+        android:text="Not signed in"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
     <EditText
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:hint="https://unifi.example.com/"
+        android:hint="https://ims.example.com/"
         android:inputType="textUri" />
 
     <Button
@@ -25,13 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/sign_in" />
+        android:text="Sign In" />
 
     <Button
         android:id="@+id/refreshButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/refresh_doors" />
+        android:text="Refresh Jobs" />
 
 </LinearLayout>

@@ -4,50 +4,68 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.unifiauto.auth.AuthManager
 
-class MainActivity : ComponentActivity() {
+// NOTE: AuthManager.kt requests scope "api://unifi/.default".
+// Before deploying, update that scope in AuthManager.kt to:
+//   api://<IMS_AZURE_AD_CLIENT_ID>/access_as_user
+// where IMS_AZURE_AD_CLIENT_ID is the ClientId from IMS appsettings.json.
+
+class MainActivity : AppCompatActivity() {
     private lateinit var authManager: AuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val repository = (application as UnifiAutoApplication).repository
+        val app = application as UnifiAutoApplication
         authManager = AuthManager(this)
 
         val statusText = findViewById<TextView>(R.id.statusText)
         val baseUrlInput = findViewById<EditText>(R.id.baseUrlInput)
-        findViewById<Button>(R.id.signInButton).setOnClickListener {
+        val signInButton = findViewById<Button>(R.id.signInButton)
+        val refreshButton = findViewById<Button>(R.id.refreshButton)
+
+        baseUrlInput.setText(app.repository.currentBaseUrl())
+
+        signInButton.setOnClickListener {
+            statusText.text = "Signing in..."
             authManager.signIn(this) { result ->
-                runOnUiThread {
-                    result.onSuccess { auth ->
-                        repository.setAuthToken(auth.accessToken)
-                        statusText.text = getString(
-                            R.string.signed_in_as,
-                            auth.account?.username ?: "Unknown"
-                        )
-                        repository.refreshDoors()
-                    }.onFailure {
-                        statusText.text = it.message ?: "Sign in failed"
+                result.fold(
+                    onSuccess = { authResult ->
+                        app.repository.setAuthToken(authResult.accessToken)
+                        app.repository.setBaseUrl(baseUrlInput.text.toString().trimEnd('/') + "/")
+                        statusText.text = "Signed in. Loading jobs..."
+                        app.repository.refreshJobs { jobResult ->
+                            runOnUiThread {
+                                jobResult.fold(
+                                    onSuccess = { jobs ->
+                                        statusText.text = "Loaded ${jobs.size} jobs. Open Android Auto to navigate."
+                                    },
+                                    onFailure = { e ->
+                                        statusText.text = "Error loading jobs: ${e.message}"
+                                    }
+                                )
+                            }
+                        }
+                    },
+                    onFailure = { e ->
+                        runOnUiThread { statusText.text = "Sign in failed: ${e.message}" }
                     }
-                }
+                )
             }
         }
 
-        findViewById<Button>(R.id.refreshButton).setOnClickListener {
-            val baseUrl = baseUrlInput.text.toString().trim()
-            if (baseUrl.isNotBlank()) {
-                repository.setBaseUrl(baseUrl)
-            }
-            repository.refreshDoors { result ->
+        refreshButton.setOnClickListener {
+            app.repository.setBaseUrl(baseUrlInput.text.toString().trimEnd('/') + "/")
+            statusText.text = "Refreshing..."
+            app.repository.refreshJobs { result ->
                 runOnUiThread {
-                    statusText.text = result
-                        .fold(
-                            onSuccess = { "Loaded ${it.size} entries for car screen" },
-                            onFailure = { it.message ?: "Refresh failed" }
-                        )
+                    result.fold(
+                        onSuccess = { jobs -> statusText.text = "Loaded ${jobs.size} jobs." },
+                        onFailure = { e -> statusText.text = "Error: ${e.message}" }
+                    )
                 }
             }
         }

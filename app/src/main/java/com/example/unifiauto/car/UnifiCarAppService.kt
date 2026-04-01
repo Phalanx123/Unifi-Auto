@@ -1,5 +1,6 @@
 package com.example.unifiauto.car
 
+import android.content.Intent
 import androidx.car.app.CarAppService
 import androidx.car.app.Session
 import androidx.car.app.validation.HostValidator
@@ -9,7 +10,7 @@ class UnifiCarAppService : CarAppService() {
 
     override fun onCreateSession(): Session {
         return object : Session() {
-            override fun onCreateScreen(intent: android.content.Intent) = DoorListScreen(carContext)
+            override fun onCreateScreen(intent: Intent) = JobListScreen(carContext)
         }
     }
 }
